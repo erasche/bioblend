@@ -57,6 +57,70 @@ class ToolShedClient(Client):
         """
         return Client._get(self, id=toolShed_id)
 
+    def create_repository(self, name, synopsis, description=None,
+                          type="unrestricted", remote_repository_url=None,
+                          homepage_url=None, category_ids=None):
+        """
+        Create a new repository in a Tool Shed
+
+        :type name: str
+        :param name: Name of the new toolshed repository
+
+        :type synopsis: str
+        :param synopsis: Synopsis of the new toolshed repository
+
+        :type description: str
+        :param description: description of the new toolshed repository
+
+        :type type: str
+        :param type: Repository type, one of 'unrestricted', 'repository_suite_definition', 'tool_dependency_definition'
+
+        :type remote_repository_url: str
+        :param remote_repository_url: a URL referencing the source of this
+          toolshed repository. E.g. https://github.com/galaxyproject/tools-devteam
+
+        :type homepage_url: str
+        :param homepage_url: Homepage of the repository's source
+
+        :type category_ids: list
+        :param category_ids: List of encoded category IDs of the repository
+
+        :rtype: dict
+        :return: Information about the repository
+                 For example::
+
+                    {
+                        "deleted": False,
+                        "deprecated": False,
+                        "description": "Some description...",
+                        "homepage_url": "https://github.com/galaxyproject/",
+                        "id": "8cf91205f2737f4",
+                        "long_description": "this is some repository",
+                        "model_class": "Repository",
+                        "name": "new_repo_17",
+                        "owner": "devteam",
+                        "private": False,
+                        "remote_repository_url": "https://github.com/galaxyproject/tools-devteam",
+                        "times_downloaded": 0,
+                        "type": unrestricted",
+                        "user_id": "adb45f5c93f827949"
+                    }
+        """
+
+        payload = {'name': name, 'synopsis': synopsis}
+        if description is not None:
+            payload['description'] = description
+        if type is not None:
+            payload['type'] = type
+        if remote_repository_url is not None:
+            payload['remote_repository_url'] = remote_repository_url
+        if homepage_url is not None:
+            payload['homepage_url'] = homepage_url
+        if category_ids is not None:
+            payload['category_ids'] = category_ids
+
+        return Client._post(self, payload=payload)
+
     def get_ordered_installable_revisions(self, name, owner):
         """
         Returns the ordered list of changeset revision hash strings that are associated
